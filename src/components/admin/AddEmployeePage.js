@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AddEmployeePage.css';
 
-const AddEmployeePage = ({ user }) => {
+const AddEmployeePage = ({ user, availableRoles }) => {
   const [isEditing, setIsEditing] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ const AddEmployeePage = ({ user }) => {
     employeeId: '',
     department: '',
     position: '',
+    role: availableRoles && availableRoles.length > 0 ? availableRoles[0].value : 'employee',
     startDate: '',
     annualSalary: '',
     phoneNumber: '',
@@ -64,6 +65,7 @@ const AddEmployeePage = ({ user }) => {
     // حقول مطلوبة
     if (!formData.department) newErrors.department = '⚠️ Department is required';
     if (!formData.position.trim()) newErrors.position = '⚠️ Position is required';
+    if (!formData.role) newErrors.role = '⚠️ Role is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -220,6 +222,24 @@ const AddEmployeePage = ({ user }) => {
                   className={`form-input ${errors.position ? 'error' : ''}`}
                 />
                 {errors.position && <span className="error-message">{errors.position}</span>}
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Role *</label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  disabled={!isEditing}
+                  onChange={handleChange}
+                  className={`form-select ${errors.role ? 'error' : ''}`}
+                >
+                  {availableRoles && availableRoles.map(role => (
+                    <option key={role.value} value={role.value}>{role.label}</option>
+                  ))}
+                </select>
+                {errors.role && <span className="error-message">{errors.role}</span>}
               </div>
             </div>
           </div>
